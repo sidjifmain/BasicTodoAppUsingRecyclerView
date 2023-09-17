@@ -2,6 +2,7 @@ package com.example.recyclerviewtest
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recyclerviewtest.databinding.ActivityMainBinding
@@ -35,9 +36,15 @@ class MainActivity : AppCompatActivity() {
         binding.addButoon.setOnClickListener{
             if (binding.editText.text.isNotEmpty()){
                 val title = binding.editText.text.toString()
-                val todo = Todo(title , false)
-                todoList.add(todo)
-                adapter.notifyItemInserted(todoList.size - 1)
+
+
+                if ( isDuplicateTitle(todoList , title)){
+                    Toast.makeText(this , "This task is alredy added" , Toast.LENGTH_LONG).show()
+                }else{
+                    val todo = Todo(title , false)
+                    todoList.add(todo)
+                    adapter.notifyItemInserted(todoList.size-1)
+                }
 
             }
             else{
@@ -47,6 +54,15 @@ class MainActivity : AppCompatActivity() {
 
 
 
+    }
+
+    fun isDuplicateTitle(todoList: MutableList<Todo>, titleToCheck: String): Boolean {
+        for (todo in todoList) {
+            if (todo.title == titleToCheck) {
+                return true
+            }
+        }
+        return false
     }
 }
 
